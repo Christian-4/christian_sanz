@@ -1,0 +1,24 @@
+{
+  "name": "exercise-1",
+  "version": "1.0.0",
+  "description": "## Introducción",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cabify-bootcamp/Exercise-1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cabify-bootcamp/Exercise-1/issues"
+  },
+  "homepage": "https://github.com/cabify-bootcamp/Exercise-1#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
