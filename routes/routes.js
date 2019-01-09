@@ -3,7 +3,7 @@ const router = express.Router();
 const sendMessage = require("../client.js")
 
 
-router.get("/holamundo", (req, res, next) => {
+router.get("/helloworld", (req, res, next) => {
     res.status(200).json("Hello, World");
 });
 
@@ -16,17 +16,17 @@ router.post("/messages", (req, res, next) => {
     }
 
     if (destination.length > 50 || message.length > 128){
-        res.status(413).json("destination respect 50 caracteres and message respect 128")
+        res.status(413).json("'destination' respect 50 characters and 'message' respect 128")
         return
     }
 
     if (destination === "" || message === ""){
-        res.status(400).json("Destination and message parameters cant be empty")
+        res.status(400).json("'destination' and 'message' parameters cant be empty")
         return
     }
 
     if (typeof destination !== "string" || typeof message !== "string"){
-        res.status(400).json("destination and message parameters must be strings")
+        res.status(400).json("'destination' and 'message' parameters must be strings")
         return
     }
 
