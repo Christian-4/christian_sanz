@@ -4,10 +4,8 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
     destination: String,
     message: String,
-    sent: {
-        type: Boolean,
-        default: false
-    }
+    sent: Boolean,
+    confirmation: Boolean
 }, {
         timestamps: {
             createdAt: 'created_at',

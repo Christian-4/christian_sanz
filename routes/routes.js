@@ -34,20 +34,23 @@ router.post("/messages", (req, res, next) => {
     sendMessage(destination, message)
         .then(response => {
             if (response.status === 200) {
-                persistence.saveMessage(destination, message, true)
+                persistence.saveMessage(destination, message, true, true)
                     .then(() => res.status(200).json(response.data + ", message sent"))
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
             }
-
-            if (response.status === 500) {
-                persistence.saveMessage(destination, message)
-                    .then(() => res.status(500).json(response.data + ", Error to send the message"))
+        })
+        .catch(err => {
+            if (err.response === undefined) {
+                persistence.saveMessage(destination, message, true, false)
+                    .then(() => res.status(504).json("Error to send the message, Timeout"))
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
             }
+            persistence.saveMessage(destination, message, false, true)
+                .then(() => res.status(500).json(err.response.data + ", Error to send the message"))
+                .catch(err => res.status(500).json("Internal Server Error"))
         })
-        .catch(err => res.status(500).json("Internal Server Error"))
 });
 
 router.get("/messages", (req, res, next) => {
