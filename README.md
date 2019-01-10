@@ -10,6 +10,19 @@ response: Hello, World
 ```
 
 ```
+Method: GET
+URL: http://localhost:9001/messages
+response: [All messages]
+```
+*Example:*
+{
+  "destination": "User",
+  "message": "Hello, how are you?",
+  "sent": true,
+  "confirmation": true
+}
+
+```
 Method: POST
 Content-Type: 'application/json'
 Request: 
@@ -33,6 +46,7 @@ Status 200 (success):
 ```
 Hello, World
 OK, message sent
+There aren't messages
 ```
 
 Status 400 (Client error):
@@ -49,6 +63,11 @@ Status 413 (Client error):
 
 Status 500 (Server error):
 ```
-INTERNAL SERVER ERROR, Error to send the message
-Error to send the message
+Internal Server Error, Error to send the message
+Internal Server Error
+```
+
+Status 504 (Server error Timeout):
+```
+Error to send the message, Timeout
 ```
