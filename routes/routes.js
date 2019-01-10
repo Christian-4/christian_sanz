@@ -59,4 +59,10 @@ router.post("/messages", (req, res, next) => {
         .catch(err => res.status(500).json("Internal Server Error"))
 });
 
+router.get("/messages", (req, res, next) => {
+    Message.find({}, { _id: 0, destination: 1, message: 1, sent: 1 })
+        .then(messages => res.status(200).json(messages))
+        .catch(err => res.status(500).json("Internal Server Error"))
+});
+
 module.exports = router;
