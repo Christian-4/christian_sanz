@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Message = require("../models/Message");
 const sendMessage = require("../client.js")
+const persistence = require("../persistence.js")
 
 
 router.get("/helloworld", (req, res, next) => {
@@ -34,23 +34,14 @@ router.post("/messages", (req, res, next) => {
     sendMessage(destination, message)
         .then(response => {
             if (response.status === 200) {
-                const newMessage = new Message({
-                    destination,
-                    message,
-                    sent: true
-                });
-                newMessage.save()
+                persistence.saveMessage(destination, message, true)
                     .then(() => res.status(200).json(response.data + ", message sent"))
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
             }
 
             if (response.status === 500) {
-                const newMessage = new Message({
-                    destination,
-                    message
-                });
-                newMessage.save()
+                persistence.saveMessage(destination, message)
                     .then(() => res.status(500).json(response.data + ", Error to send the message"))
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
@@ -60,8 +51,13 @@ router.post("/messages", (req, res, next) => {
 });
 
 router.get("/messages", (req, res, next) => {
-    Message.find({}, { _id: 0, destination: 1, message: 1, sent: 1 })
-        .then(messages => res.status(200).json(messages))
+    persistence.getMessages()
+        .then(messages => {
+            if (messages.length === 0) {
+                res.status(200).json("There aren't messages")
+            }
+            res.status(200).json(messages)
+        })
         .catch(err => res.status(500).json("Internal Server Error"))
 });
 
