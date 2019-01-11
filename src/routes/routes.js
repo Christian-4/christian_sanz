@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const sendMessage = require("../client.js")
-const persistence = require("../persistence.js")
+const sendMessage = require("../client/client.js")
+const persistence = require("../client/persistence.js")
 
 
 router.get("/helloworld", (req, res, next) => {

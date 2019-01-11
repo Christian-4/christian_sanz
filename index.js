@@ -21,7 +21,7 @@ const intervalID = setInterval(() => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const index = require('./routes/routes.js');
+const index = require('./src/routes/routes.js');
 app.use('/', index);
 
 app.listen(9001, () => {

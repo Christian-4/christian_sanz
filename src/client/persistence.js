@@ -1,4 +1,4 @@
-const Message = require("./models/Message");
+const Message = require("../models/Message");
 
 const persistence = {
     saveMessage: function (destination, message, sent, confirmation) {
