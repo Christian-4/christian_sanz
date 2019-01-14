@@ -10,6 +10,11 @@ module.exports = function (req, res, amount) {
         return true
     }
 
+    if (amount <= 0) {
+        res.status(400).json("The min amount to add is 1 credit each time")
+        return true
+    }
+
     if (amount === "") {
         res.status(400).json("'amount' parameter cant be empty")
         return true
