@@ -12,7 +12,7 @@ module.exports = (res, destination, body, credit) => {
                     .then(() => {
                         Credit.findByIdAndUpdate(credit._id, { $inc: { amount: -1 } }, { new: true })
                             .then(() => res.status(200).json(response.data + ", message sent"))
-                            .catch(err => res.status(500).json("Internal Server Error " + err))
+                            .catch(err => res.status(500).json("Internal Server Error"))
                     })
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
@@ -23,8 +23,12 @@ module.exports = (res, destination, body, credit) => {
                 saveMessage(destination, body, true, false)
                     .then(() => {
                         Credit.findByIdAndUpdate(credit._id, { $inc: { amount: -1 } }, { new: true })
-                            .then(() => res.status(504).json("Error to send the message, Timeout"))
-                            .catch(err => res.status(500).json("Internal Server Error " + err))
+                            .then(() => {
+                                Credit.findByIdAndUpdate(credit._id, { $inc: { amount: +1 } }, { new: true })
+                                    .then(() => res.status(504).json("Error to send the message, Timeout"))
+                                    .catch(err => res.status(500).json("Internal Server Error"))
+                            })
+                            .catch(err => res.status(500).json("Internal Server Error"))
                     })
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
