@@ -1,3 +1,5 @@
+const locks = require('locks');
+const mutex = locks.createMutex();
 const Credit = require("../models/Credit");
 
 module.exports = (res, amount, conditions = {}) => {
@@ -12,11 +14,19 @@ module.exports = (res, amount, conditions = {}) => {
                     })
                     .catch(err => res.status(500).json("Error to add credit"))
             } else {
-                credits[0].update({ $inc: { amount } }, { new: true })
-                    .then(() => {
-                        res.status(200).json(`There are ${credits[0].amount + amount} credits`)
-                    })
-                    .catch(err => res.status(500).json("Error to add credit"))
+                mutex.lock(function () {
+                    credits[0].update({ $inc: { amount } }, { new: true })
+                        .then(() => {
+                            res.status(200).json(`There are ${credits[0].amount + amount} credits`)
+                            mutex.unlock();
+                        })
+                        .catch(err => {
+                            res.status(500).json("Error to add credit")
+                            mutex.unlock();
+                        })
+
+                });
+
             }
         })
         .catch(err => res.status(500).json("Error to add credit"))
