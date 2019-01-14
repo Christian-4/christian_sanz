@@ -1,14 +1,19 @@
 const axios = require('axios')
 const saveMessage = require("./saveMessage.js")
+const Credit = require("../models/Credit");
 
 const urlBase = "http://christian_sanz_messageapp_1:3000"
 
-module.exports = (res, destination, body) => {
+module.exports = (res, destination, body, credit) => {
     axios({ method: "post", url: `${urlBase}/message`, timeout: 3000, data: { destination, body } })
         .then(response => {
             if (response.status === 200) {
                 saveMessage(destination, body, true, true)
-                    .then(() => res.status(200).json(response.data + ", message sent"))
+                    .then(() => {
+                        Credit.findByIdAndUpdate(credit._id, { $inc: { amount: -1 } }, { new: true })
+                            .then(() => res.status(200).json(response.data + ", message sent"))
+                            .catch(err => res.status(500).json("Internal Server Error " + err))
+                    })
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
             }
@@ -16,7 +21,11 @@ module.exports = (res, destination, body) => {
         .catch(err => {
             if (err.response === undefined) {
                 saveMessage(destination, body, true, false)
-                    .then(() => res.status(504).json("Error to send the message, Timeout"))
+                    .then(() => {
+                        Credit.findByIdAndUpdate(credit._id, { $inc: { amount: -1 } }, { new: true })
+                            .then(() => res.status(504).json("Error to send the message, Timeout"))
+                            .catch(err => res.status(500).json("Internal Server Error " + err))
+                    })
                     .catch(err => res.status(500).json("Internal Server Error"))
                 return
             }
