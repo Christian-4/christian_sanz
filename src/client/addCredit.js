@@ -1,6 +1,6 @@
 const locks = require('locks');
 const mutex = locks.createMutex();
-const Credit = require("../models/Credit");
+const { Credit, Credit2 } = require("../models/Credit");
 
 module.exports = (res, amount, conditions = {}) => {
     Credit.find(conditions)

@@ -1,5 +1,9 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const conn = mongoose.createConnection(process.env.DB, { useNewUrlParser: true });
+const conn2 = mongoose.createConnection(process.env.DB2, { useNewUrlParser: true });
 
 const messageSchema = new Schema({
     destination: String,
@@ -13,5 +17,6 @@ const messageSchema = new Schema({
         }
     });
 
-const Message = mongoose.model('Message', messageSchema);
-module.exports = Message;
+const Message = conn.model('Message', messageSchema);
+const Message2 = conn2.model('Message2', messageSchema);
+module.exports = { Message, Message2 };

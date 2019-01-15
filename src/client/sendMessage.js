@@ -2,7 +2,7 @@ const axios = require('axios')
 const locks = require('locks');
 const mutex = locks.createMutex();
 const saveMessage = require("./saveMessage.js")
-const Credit = require("../models/Credit");
+const { Credit, Credit2 } = require("../models/Credit");
 
 
 const urlBase = "http://christian_sanz_messageapp_1:3000"

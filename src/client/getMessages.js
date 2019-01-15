@@ -1,4 +1,4 @@
-const Message = require("../models/Message")
+const {Message, Message2} = require("../models/Message")
 
 module.exports = (res, conditions = {}) => {
     Message.find(conditions, { _id: 0, destination: 1, message: 1, sent: 1, confirmation: 1 })

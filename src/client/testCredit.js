@@ -1,4 +1,4 @@
-const Credit = require("../models/Credit");
+const { Credit, Credit2 } = require("../models/Credit");
 const sendMessage = require("./sendMessage.js")
 
 module.exports = (res, destination, message, conditions = {}) => {
