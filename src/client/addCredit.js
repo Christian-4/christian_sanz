@@ -35,6 +35,7 @@ module.exports = (res, amount, conditions = {}) => {
                                             credits[0].update({ $inc: { amount: -amount } }, { new: true })
                                                 .then(() => {
                                                     res.status(500).json("Error to add credit")
+                                                    mutex.unlock();
                                                 })
                                         })
                                 })
@@ -42,6 +43,7 @@ module.exports = (res, amount, conditions = {}) => {
                                     credits[0].update({ $inc: { amount: -amount } }, { new: true })
                                         .then(() => {
                                             res.status(500).json("Error to add credit")
+                                            mutex.unlock();
                                         })
                                 })
                         })
