@@ -3,7 +3,10 @@ services:
   exercise3:
     build: .
     ports:
-     - "9001:9001"
+      - "9001:9001"
+    links:
+      - messageapp
+      - mongodb
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -14,3 +17,9 @@ services:
       - ./data/db:/data/db
     ports:
       - 27017:27017
+  mongodb2:
+    image: mongo
+    volumes:
+      - ./data2/db:/data/db
+    ports:
+      - 27018:27017
