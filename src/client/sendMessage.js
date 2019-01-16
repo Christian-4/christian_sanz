@@ -24,7 +24,7 @@ module.exports = (res, destination, body, credit) => {
                                                     mutex.unlock();
                                                 })
                                                 .catch(err => {
-                                                    res.status(500).json("Internal Server Error " + err)
+                                                    res.status(500).json("Internal Server Error")
                                                     mutex.unlock();
                                                 })
                                             return
@@ -43,17 +43,17 @@ module.exports = (res, destination, body, credit) => {
                                                                     mutex.unlock();
                                                                 })
                                                                 .catch(err => {
-                                                                    res.status(500).json("Internal Server Error " + err)
+                                                                    res.status(500).json("Internal Server Error")
                                                                     mutex.unlock();
                                                                 })
                                                         })
                                                         .catch(err => {
-                                                            res.status(500).json("Internal Server Error " + err)
+                                                            res.status(500).json("Internal Server Error")
                                                             mutex.unlock();
                                                         })
                                                 })
                                                 .catch(err => {
-                                                    res.status(500).json("Internal Server Error " + err)
+                                                    res.status(500).json("Internal Server Error")
                                                     mutex.unlock();
                                                 })
                                             return
@@ -69,17 +69,17 @@ module.exports = (res, destination, body, credit) => {
                                                                 mutex.unlock();
                                                             })
                                                             .catch(err => {
-                                                                res.status(500).json("Internal Server Error " + err)
+                                                                res.status(500).json("Internal Server Error")
                                                                 mutex.unlock();
                                                             })
                                                     })
                                                     .catch(err => {
-                                                        res.status(500).json("Internal Server Error " + err)
+                                                        res.status(500).json("Internal Server Error")
                                                         mutex.unlock();
                                                     })
                                             })
                                             .catch(err => {
-                                                res.status(500).json("Internal Server Error " + err)
+                                                res.status(500).json("Internal Server Error")
                                                 mutex.unlock();
                                             })
                                     })
@@ -87,7 +87,11 @@ module.exports = (res, destination, body, credit) => {
                             .catch(err => {
                                 Credit.findByIdAndUpdate(credit._id, { $inc: { amount: 1 } }, { new: true })
                                     .then(() => {
-                                        res.status(500).json("Internal Server Error " + err)
+                                        res.status(500).json("Internal Server Error")
+                                        mutex.unlock();
+                                    })
+                                    .catch(err => {
+                                        res.status(500).json("Internal Server Error")
                                         mutex.unlock();
                                     })
                             })
@@ -95,7 +99,11 @@ module.exports = (res, destination, body, credit) => {
                     .catch(err => {
                         Credit.findByIdAndUpdate(credit._id, { $inc: { amount: 1 } }, { new: true })
                             .then(() => {
-                                res.status(500).json("Internal Server Error " + err)
+                                res.status(500).json("Internal Server Error")
+                                mutex.unlock();
+                            })
+                            .catch(err => {
+                                res.status(500).json("Internal Server Error")
                                 mutex.unlock();
                             })
                     })
@@ -103,7 +111,11 @@ module.exports = (res, destination, body, credit) => {
             .catch(err => {
                 Credit.findByIdAndUpdate(credit._id, { $inc: { amount: 1 } }, { new: true })
                     .then(() => {
-                        res.status(500).json("Internal Server Error " + err)
+                        res.status(500).json("Internal Server Error")
+                        mutex.unlock();
+                    })
+                    .catch(err => {
+                        res.status(500).json("Internal Server Error")
                         mutex.unlock();
                     })
             })
