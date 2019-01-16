@@ -1,22 +1,23 @@
-require('dotenv').config();
+const mongoose = require("mongoose");
+const database = require("../database");
 
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const conn = mongoose.createConnection(process.env.DB, { useNewUrlParser: true });
-const conn2 = mongoose.createConnection(process.env.DB2, { useNewUrlParser: true });
+let messageSchema = new mongoose.Schema({
+  destination: String,
+  body: String,
+  location: {
+  	name: {
+      type: String,
+      default: "Default"
+    },
+    cost: {
+      type: Number,
+      default: 1
+    }
+  },
+  status: {
+    type: String,
+    enum: ["ERROR", "OK", "TIMEOUT"]
+  }
+});
 
-const messageSchema = new Schema({
-    destination: String,
-    message: String,
-    sent: Boolean,
-    confirmation: Boolean
-}, {
-        timestamps: {
-            createdAt: 'created_at',
-            updatedAt: 'updated_at'
-        }
-    });
-
-const Message = conn.model('Message', messageSchema);
-const Message2 = conn2.model('Message2', messageSchema);
-module.exports = { Message, Message2 };
+module.exports = (dbKey) => database.get(dbKey).model("Message", messageSchema);

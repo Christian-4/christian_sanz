@@ -1,15 +1,80 @@
-const express = require('express');
+const http = require("http");
+const express = require("express");
+
+const bodyParser = require("body-parser");
+const {
+  Validator,
+  ValidationError
+} = require("express-json-validator-middleware");
+
+const sendMessage = require("./src/controllers/sendMessage");
+const getMessages = require("./src/controllers/getMessages");
+const updateCredit = require("./src/controllers/updateCredit");
+
 const app = express();
-const bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const validator = new Validator({ allErrors: true });
+const { validate } = validator;
 
-const index = require('./src/routes/routes.js');
-app.use('/', index);
+const messageSchema = {
+  type: "object",
+  required: ["destination", "body"],
+  properties: {
+    destination: {
+      type: "string"
+    },
+    body: {
+      type: "string"
+    },
+    location: {
+      name: {
+        type: "string"
+      },
+      cost: {
+        type: "number"
+      }
+    }
+  }
+};
 
-app.listen(9001, () => {
-    console.log(`Listening on http://localhost:9001`);
+const creditSchema = {
+  type: "object",
+  required: ["amount"],
+  properties: {
+    location: {
+      type: "string"
+    },
+    amount: {
+      type: "number"
+    }
+  }
+};
+
+app.post(
+  "/messages",
+  bodyParser.json(),
+  validate({ body: messageSchema }),
+  sendMessage
+);
+
+app.post(
+  "/credit",
+  bodyParser.json(),
+  validate({ body: creditSchema }),
+  updateCredit
+);
+
+app.get("/messages", getMessages);
+
+app.use(function(err, req, res, next) {
+  console.log(res.body);
+  if (err instanceof ValidationError) {
+    res.sendStatus(400);
+  } else {
+    res.sendStatus(500);
+  }
 });
 
-module.exports = app;
+app.listen(9001, function() {
+  console.log("App started on PORT 9001");
+});
