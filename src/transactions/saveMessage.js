@@ -1,12 +1,23 @@
 const database = require("../database");
 const Message = require("../models/message");
-const { cleanClone } = require("../utils");
+const { unversionedClone } = require("../utils");
+
+function saveMessage(model, newValue) {
+  return model.findOneAndUpdate(
+    {
+      _id: newValue._id
+    },
+    newValue,
+    {
+      upsert: true,
+      new: true
+    }
+  );
+}
 
 function saveMessageReplica(replica, retries) {
   if (retries > 0) {
-    replica.markModified("body");
-    return replica
-      .save()
+    return saveMessage(Message("replica"), replica)
       .then(doc => {
         console.log("Message replicated successfully", doc);
         return doc;
@@ -20,20 +31,13 @@ function saveMessageReplica(replica, retries) {
 }
 
 function saveMessageTransaction(newValue) {
-  const MessagePrimary = Message();
-  const MessageReplica = Message("replica");
-
-  let message = new MessagePrimary(newValue);
-
-  return message
-    .save()
+  return saveMessage(Message(), newValue)
     .then(doc => {
       console.log("Message saved successfully:", doc);
-      return cleanClone(doc);
+      return unversionedClone(doc);
     })
     .then(clone => {
-      let replica = new MessageReplica(clone);
-      saveMessageReplica(replica, 3);
+      saveMessageReplica(clone, 3);
       return clone;
     })
     .catch(err => {
@@ -46,6 +50,6 @@ module.exports = function(messageParams, cb) {
   saveMessageTransaction(messageParams)
     .then(() => cb())
     .catch(err => {
-      cb(undefined, err);
+      cb(err);
     });
 };

@@ -1,12 +1,19 @@
 version: "3"
 services:
-  exercise5:
+  exercise6:
     build: .
     ports:
-      - "9001:9001"
+      - "9006:9006"
     links:
+      - messageapp
       - mongodb
       - replica
+      - redis
+    depends_on:
+      - messageapp
+      - mongodb
+      - replica
+      - redis
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -20,6 +27,10 @@ services:
   replica:
     image: mongo
     volumes:
-      - ./data/db2:/data/db
+      - ./data/replica:/data/db
     ports:
       - 27018:27017
+  redis:
+    image: redis
+    ports:
+      - 6379:6379

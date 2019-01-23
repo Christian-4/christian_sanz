@@ -1,4 +1,3 @@
-const http = require("http");
 const express = require("express");
 
 const bodyParser = require("body-parser");
@@ -10,6 +9,7 @@ const {
 const sendMessage = require("./src/controllers/sendMessage");
 const getMessages = require("./src/controllers/getMessages");
 const updateCredit = require("./src/controllers/updateCredit");
+const getMessageStatus = require("./src/controllers/getMessageStatus");
 
 const app = express();
 
@@ -66,6 +66,8 @@ app.post(
 
 app.get("/messages", getMessages);
 
+app.get("/message/:messageId/status", getMessageStatus);
+
 app.use(function(err, req, res, next) {
   console.log(res.body);
   if (err instanceof ValidationError) {
@@ -75,6 +77,6 @@ app.use(function(err, req, res, next) {
   }
 });
 
-app.listen(9001, function() {
-  console.log("App started on PORT 9001");
+app.listen(9006, function() {
+  console.log("App started on PORT 9006");
 });

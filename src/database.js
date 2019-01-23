@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
+const urls = require("./urls");
 
-const servers = {
-  primary: "localhost:27017",
-  replica: "localhost:27018"
-  // primary: "127.0.0.1:27017",
-  // replica: "127.0.0.1:27018"
-};
 const database = "cabify_bootcamp";
 
 function createConnection(name, server, database) {
@@ -37,8 +32,8 @@ function setupConnection(connection, backup) {
 }
 
 const connections = [
-  createConnection("PRIMARY", servers.primary, database),
-  createConnection("REPLICA", servers.replica, database)
+  createConnection("PRIMARY", urls.MONGODB_URL, database),
+  createConnection("REPLICA", urls.REPLICA_URL, database)
 ];
 
 connections[0].isPrimary = true;
@@ -57,7 +52,6 @@ module.exports = {
       console.log("Requested connection:", dbKey);
       console.log("Found:", conn.name);
     }
-    debugger;
     return conn.conn;
   },
 
